@@ -1,0 +1,14 @@
+# Never commit imaging data or outputs. Real scans stay on approved servers.
+data/
+results/
+qc_output/
+*.nii
+*.nii.gz
+*.dcm
+
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+.DS_Store

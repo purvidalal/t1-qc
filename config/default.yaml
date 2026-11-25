@@ -1,0 +1,30 @@
+# QC thresholds for clinical T1-weighted MRI.
+# Each check returns pass / warn / fail. A scan's overall status is the worst
+# of its individual checks. Tune these to the downstream tool: SynthSeg
+# tolerates thick slices far better than FreeSurfer recon-all does.
+
+geometry:
+  min_dims: 3                  # must be a 3D volume (4D series are flagged)
+  slice_thickness_warn_mm: 1.5 # > this: usable for SynthSeg, risky for FreeSurfer
+  slice_thickness_fail_mm: 3.0 # > this: typical 2D clinical axial stack
+  anisotropy_warn: 2.0         # max voxel size / min voxel size
+  min_fov_mm: 140              # smallest extent along any axis (whole-brain coverage)
+
+intensity:
+  max_nonfinite_fraction: 0.0  # any NaN/Inf voxel = corrupted file
+  min_foreground_fraction: 0.05
+  snr_warn: 8.0                # foreground mean / background std
+  snr_fail: 4.0
+
+coverage:
+  edge_foreground_warn: 0.05   # largest share of any outer face covered by tissue
+  edge_foreground_fail: 0.15   # high = head likely cut off by the field of view
+
+sequence:
+  # Matched case-insensitively against SeriesDescription / ProtocolName.
+  t1_keywords: [t1, mprage, mp-rage, spgr, bravo, tfe, fspgr, vibe, mp2rage]
+  exclude_keywords: [flair, t2, dwi, diffusion, adc, swi, localizer, scout, survey, perfusion, bold]
+
+contrast:
+  # Gadolinium changes T1 appearance; most AD models were trained without it.
+  contrast_status: warn
